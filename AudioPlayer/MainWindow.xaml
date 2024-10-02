@@ -11,7 +11,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="80"/>
+           
         </Grid.ColumnDefinitions>
         <ContentControl Content="{Binding CurrentViewModel}" >
             <ContentControl.Resources>
@@ -19,8 +19,22 @@
                     <views:AudioPlayerView/>
                 </DataTemplate>
             </ContentControl.Resources>
-         
+
         </ContentControl>
-        <views:PlayListSideBar Grid.Column="1"/>
+        <Grid Width="250" Margin="0,20,0,0" HorizontalAlignment="Right">
+
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="TranslateNav" X="180" />
+            </Grid.RenderTransform>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="180"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Nav" Height="30" VerticalAlignment="Top" Click="Button_Click" />
+            <views:PlayListSideBar   Grid.Column="1"/>
+
+           
+        </Grid>
     </Grid>
 </Window>
