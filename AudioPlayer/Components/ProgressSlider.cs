@@ -163,7 +163,8 @@ namespace AudioPlayer.Components
                         IsPlaying = false;
                         CurrentPosition = 0;
                         AudioPlayer.Close();
-
+                        audioDispatcherTime.Stop();
+                        timer.Stop();
                     }
 
                 });

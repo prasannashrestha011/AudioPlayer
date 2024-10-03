@@ -3,13 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:AudioPlayer.Views" xmlns:viewmodels="clr-namespace:AudioPlayer.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:PlayListViewModel}"
+            xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:AudioPlayer.Views"
+             xmlns:viewmodels="clr-namespace:AudioPlayer.ViewModels"
+             xmlns:datatypes="clr-namespace:AudioPlayer.Structure" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:TreeViewModel}"
              mc:Ignorable="d" 
          
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox ItemsSource="{Binding List,UpdateSourceTrigger=PropertyChanged}">
-         
-        </ListBox>      
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Command="{Binding AddNewDir}" Content="Add"/>
+        <TreeView 
+        x:Name="FileExplorerTreeView"
+       Grid.Row="1"
+       AllowDrop="True"
+       ItemsSource="{Binding Folders.SubFolder,UpdateSourceTrigger=PropertyChanged}" 
+       PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
+       PreviewMouseMove="TreeView_PreviewMouseMove"
+       DragEnter="TreeView_DragEnter"
+       DragOver="TreeView_DragOver"
+       Drop="TreeView_Drop">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type datatypes:RootFolder}" ItemsSource="{Binding SubFolder}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../ImageSource/Folder&amp;FileIcons/folder.ico" Width="16"/>
+                        <TextBlock Text="{Binding FolderName}" Margin="5,0,0,0">
+                                
+                        </TextBlock>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <i:InvokeCommandAction   Command="{Binding DataContext.SelectedObj, 
+                                      RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                            CommandParameter="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </StackPanel>
+                    
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type datatypes:Files}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../ImageSource/Folder&amp;FileIcons/file.ico" Width="16"/>
+                        <TextBlock Text="{Binding FileName}" Margin="5,0,0,0">
+                                                   
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+            
+        </TreeView>
+
+
     </Grid>
 </UserControl>

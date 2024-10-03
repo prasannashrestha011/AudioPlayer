@@ -30,7 +30,7 @@ namespace AudioPlayer
             if (isNavigated)
             {
                 animation.From = TranslateNav.X;
-                animation.To = TranslateNav.X + 180;
+                animation.To = TranslateNav.X + 210;
 
                 isNavigated = false;
             }

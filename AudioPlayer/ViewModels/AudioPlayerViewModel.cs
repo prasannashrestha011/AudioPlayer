@@ -10,6 +10,8 @@ using AudioPlayer.Utilities;
 using AudioPlayer.Components;
 using System.Diagnostics;
 using System.Windows.Threading;
+using AudioPlayer.Structure;
+using AudioPlayer.LocalStorage;
 namespace AudioPlayer.ViewModels
 {
     public class AudioPlayerViewModel : ViewModelBase
@@ -95,8 +97,10 @@ namespace AudioPlayer.ViewModels
 
                 var selectedFilePath = openFileDialog.FileName;
                 SelectedFilePath = selectedFilePath;
+               
                 SelectedFileName = Path.GetFileName(selectedFilePath);
-
+                PlayListStruct playListStruct = new PlayListStruct(SelectedFileName, SelectedFilePath);
+                AudioLocalStorage.SavePlayListToLocalStorage("__AudioPlayList_ss_.txt", playListStruct);
                 AudioPlayer.MediaOpened += GetAudioDuration;
 
                 AudioPlayer.Open(new Uri(SelectedFilePath));

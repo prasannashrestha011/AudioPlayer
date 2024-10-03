@@ -7,8 +7,15 @@
         xmlns:models="clr-namespace:AudioPlayer.ViewModels"
         xmlns:views="clr-namespace:AudioPlayer.Views"
         mc:Ignorable="d"
+        Icon="pack://application:,,,/ImageSource/AppIcon/icon.ico"
         Title="MainWindow" Height="450" Width="500" MinWidth="500" >
+
+        <Window.Resources>
+            <ResourceDictionary Source="/UI_Designs/PlayButtonUi.xaml"/>
+        </Window.Resources>
+  
     <Grid>
+       
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
            
@@ -24,15 +31,17 @@
         <Grid Width="250" Margin="0,20,0,0" HorizontalAlignment="Right">
 
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="TranslateNav" X="180" />
+                <TranslateTransform x:Name="TranslateNav" X="210" />
             </Grid.RenderTransform>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="210"/>
             </Grid.ColumnDefinitions>
-            <Button Content="Nav" Height="30" VerticalAlignment="Top" Click="Button_Click" />
-            <views:PlayListSideBar   Grid.Column="1"/>
+            <Button  Height="30" VerticalAlignment="Top" Click="Button_Click" Width="40" Style="{StaticResource sidenavButton}">
+                <Image Source="/ImageSource/NavIcons/ham.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Button>
+            <views:PlayListSideBar   Grid.Column="1"/> 
 
            
         </Grid>

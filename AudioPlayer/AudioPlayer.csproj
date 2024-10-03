@@ -9,8 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ImageSource\AppIcon\icon.ico" />
     <None Remove="ImageSource\back.png" />
+    <None Remove="ImageSource\Folder&amp;FileIcons\file.ico" />
+    <None Remove="ImageSource\Folder&amp;FileIcons\folder.ico" />
     <None Remove="ImageSource\front.png" />
+    <None Remove="ImageSource\mainThumbnail\mainthumbnail.png" />
+    <None Remove="ImageSource\NavIcons\ham.png" />
     <None Remove="ImageSource\pausebutton.png" />
     <None Remove="ImageSource\playbutton.png" />
     <None Remove="ImageSource\Polygon 2 %281%29 - Copy.png" />
@@ -26,6 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="ImageSource\AppIcon\icon.ico" />
+    <Resource Include="ImageSource\Folder&amp;FileIcons\folder.ico" />
+    <Resource Include="ImageSource\Folder&amp;FileIcons\file.ico" />
+    <Resource Include="ImageSource\mainThumbnail\mainthumbnail.png" />
+    <Resource Include="ImageSource\NavIcons\ham.png" />
     <Resource Include="ImageSource\pausebutton.png" />
     <Resource Include="ImageSource\playbutton.png" />
     <Resource Include="ImageSource\seekButtons\active_back.png" />
