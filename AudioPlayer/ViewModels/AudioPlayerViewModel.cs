@@ -196,9 +196,10 @@ namespace AudioPlayer.ViewModels
 
         private async void OnFileSelected()
         {
+            currentIdx = TreeViewModel.SelectedFileIndex; 
             AudioSlider.IsPlaying = false;
-           SelectedFileName=TreeViewModel.SelectedFile.FileName;
-           SelectedFilePath=TreeViewModel.SelectedFile.FilePath;
+            SelectedFileName = LoadedFileList.LoadedAudioList[TreeViewModel.SelectedFileIndex].FileName;
+           SelectedFilePath = LoadedFileList.LoadedAudioList[TreeViewModel.SelectedFileIndex].FilePath;
             AudioPlayer.Open(new Uri(SelectedFilePath));
             await WaitForMediaOpened();
            PlaySelectedAudio();
@@ -220,14 +221,16 @@ namespace AudioPlayer.ViewModels
             AudioPlayer.MediaOpened += OnMediaOpened;
             return tcs.Task;
         }
-        private int currentIdx = 0;
+        private int currentIdx = TreeViewModel.SelectedFileIndex;
+
         private async void LoadedFolderFiles()
         {
-            
+        
             AudioPlayer.MediaEnded -= Media_Ended;
             AudioPlayer.MediaEnded += Media_Ended;
             if (LoadedFileList.LoadedAudioList != null && LoadedFileList.LoadedAudioList.Count>0)
             {
+                
                 SelectedFileName = LoadedFileList.LoadedAudioList[currentIdx].FileName;
                 SelectedFilePath = LoadedFileList.LoadedAudioList[currentIdx].FilePath;
                 AudioPlayer.Open(new Uri(SelectedFilePath));
@@ -237,6 +240,7 @@ namespace AudioPlayer.ViewModels
         private void Media_Ended(object sender, EventArgs e)
         {
             currentIdx++;
+            Debug.WriteLine($"currnt running audio{currentIdx} ");
             if (currentIdx < LoadedFileList.LoadedAudioList.Count)
             {
                 PlayInQueue();
@@ -244,11 +248,14 @@ namespace AudioPlayer.ViewModels
         }
         private async void PlayInQueue()
         {
-            SelectedFileName = LoadedFileList.LoadedAudioList[currentIdx].FileName;
-            SelectedFilePath = LoadedFileList.LoadedAudioList[currentIdx].FilePath;
-            AudioPlayer.Open(new Uri(SelectedFilePath));
-            await WaitForMediaOpened();
-            PlaySelectedAudio();
+            if (LoadedFileList.LoadedAudioList[currentIdx]!=null)
+            {
+                SelectedFileName = LoadedFileList.LoadedAudioList[currentIdx].FileName;
+                SelectedFilePath = LoadedFileList.LoadedAudioList[currentIdx].FilePath;
+                AudioPlayer.Open(new Uri(SelectedFilePath));
+                await WaitForMediaOpened();
+                PlaySelectedAudio();
+            }
         }
     }
 }

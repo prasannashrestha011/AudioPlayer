@@ -59,6 +59,17 @@ namespace AudioPlayer.ViewModels
             
             }
         }
+        private static int selectedFileIndex;
+        public static int SelectedFileIndex
+        {
+            get => selectedFileIndex;
+            set
+            {
+                selectedFileIndex = value;
+                OnStaticPropertyChanged();
+              
+            }
+        }
        
         public ICommand AddNewDir => new RelayCommandBase(canExecute => true, execute => CreateDir());
         public ICommand DisplayFileName => new RelayCommandBase(canExecute => true, execute => OnFileSelected(execute));
@@ -101,6 +112,8 @@ namespace AudioPlayer.ViewModels
         public void OnFileSelected(object parameter)
         {
             var fileInfo = parameter as Files;
+            SelectedFileIndex = Folders.SubFolder.IndexOf(fileInfo)-1;
+            Debug.WriteLine($"{SelectedFileIndex} is current index");
             SelectedFile = fileInfo;
         }
         public void CreateDir()

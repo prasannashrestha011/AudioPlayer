@@ -28,7 +28,30 @@
         </Menu>
         <Grid Grid.Row="1">
             <Grid SnapsToDevicePixels="True"  >
-                <Image Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Image 
+                    RenderTransformOrigin="0.5 0.5"
+                    Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOptions.BitmapScalingMode="HighQuality">
+                    <Image.RenderTransform>
+                        <RotateTransform x:Name="imageTransform" Angle="0"/>
+                        
+                    </Image.RenderTransform>
+                    <Image.Triggers>
+                        <EventTrigger RoutedEvent="Image.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                  Storyboard.TargetName="imageTransform"
+                  Storyboard.TargetProperty="Angle"
+                  From="0"
+                  To="360"
+                 
+                  RepeatBehavior="Forever"
+                  />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Image.Triggers>
+                </Image>
             </Grid>
         </Grid>
             <Grid Grid.Row="2" Margin="0,15,0,0"  >
