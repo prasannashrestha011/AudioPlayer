@@ -54,6 +54,7 @@ namespace AudioPlayer.Components
             {
                 isPlaying = value;
                 OnPropertyChanged(nameof(IsPlaying));
+                Debug.WriteLine($"{IsPlaying} has changed from progress slider");
             }
         }
         private bool isMoving;
@@ -81,15 +82,16 @@ namespace AudioPlayer.Components
             }
         }
         private int counter = 0;
-        public ProgressSlider(double currentPosition, double audioDuration,string audioTimeSpanStr, bool isMoving,bool isPlaying,MediaPlayer audioPlayer)
+        public ProgressSlider(double currentPosition, double audioDuration,string audioTimeSpanStr, bool isMoving, bool isPlaying,MediaPlayer audioPlayer)
         {
             CurrentPosition = currentPosition;
 
             AudioDuration = audioDuration;
-            IsPlaying = isPlaying;
+           
 
             AudioTimeSpanStr = audioTimeSpanStr;
             IsMoving = isMoving;
+             IsPlaying = isPlaying;
             AudioPlayer = audioPlayer;
             timer = new System.Timers.Timer(1000);
         }
@@ -108,6 +110,7 @@ namespace AudioPlayer.Components
         public void EnableCursorMovement()
         {
             IsMoving = true;
+            IsPlaying = true;
         }
         public void UpdateTimeSpanLeft()
         {
@@ -154,17 +157,19 @@ namespace AudioPlayer.Components
                     if (CurrentPosition < AudioDuration)
                     {
                         CurrentPosition += 1;
-
-
+                    
+                     
                     }
                     else
                     {
-
                         IsPlaying = false;
                         CurrentPosition = 0;
-                        AudioPlayer.Close();
+                   
                         audioDispatcherTime.Stop();
                         timer.Stop();
+                       
+                        Debug.WriteLine("running in Movethumb");
+                       
                     }
 
                 });

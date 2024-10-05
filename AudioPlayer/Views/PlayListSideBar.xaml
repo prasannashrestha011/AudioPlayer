@@ -11,13 +11,14 @@
              mc:Ignorable="d" 
          
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button Command="{Binding AddNewDir}" Content="Add"/>
         <TreeView 
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
         x:Name="FileExplorerTreeView"
        Grid.Row="1"
        AllowDrop="True"
@@ -50,6 +51,13 @@
                         <TextBlock Text="{Binding FileName}" Margin="5,0,0,0">
                                                    
                         </TextBlock>
+                        <StackPanel.InputBindings>
+                            <MouseBinding 
+            MouseAction="LeftDoubleClick" 
+            Command="{Binding DataContext.SelectedFileCmd, 
+                RelativeSource={RelativeSource AncestorType=UserControl}}" 
+            CommandParameter="{Binding}"/>
+                        </StackPanel.InputBindings>
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>

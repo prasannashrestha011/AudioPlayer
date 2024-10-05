@@ -28,22 +28,35 @@
             </ContentControl.Resources>
 
         </ContentControl>
-        <Grid Width="250" Margin="0,20,0,0" HorizontalAlignment="Right">
+        <Grid Width="300" Margin="0,20,0,0" HorizontalAlignment="Right">
 
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="TranslateNav" X="210" />
+                <TranslateTransform x:Name="TranslateNav" X="250" />
             </Grid.RenderTransform>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
             <Button  Height="30" VerticalAlignment="Top" Click="Button_Click" Width="40" Style="{StaticResource sidenavButton}">
                 <Image Source="/ImageSource/NavIcons/ham.png" RenderOptions.BitmapScalingMode="HighQuality"/>
             </Button>
-            <views:PlayListSideBar   Grid.Column="1"/> 
+            <views:PlayListSideBar   Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/> 
 
            
+        </Grid>
+        <Grid VerticalAlignment="Bottom"  >
+            <StackPanel>
+                <Button 
+                    Click="Button_Click_1"
+                    Content="playlist" Width="80" HorizontalAlignment="Left"/>
+                
+                    <views:PlayListView Height="400" Padding="12,15,12,0" />
+              
+            </StackPanel>
+            <Grid.RenderTransform>
+                <TranslateTransform  x:Name="PlayListModel" Y="400"/>
+            </Grid.RenderTransform>
         </Grid>
     </Grid>
 </Window>

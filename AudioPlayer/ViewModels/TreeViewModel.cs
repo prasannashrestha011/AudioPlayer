@@ -1,6 +1,7 @@
 ﻿using AudioPlayer.ModelBase;
 using AudioPlayer.RelayBase;
 using AudioPlayer.Structure;
+using AudioPlayer.Utilities;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
@@ -20,6 +21,7 @@ namespace AudioPlayer.ViewModels
             {
                 folders = value;
                 OnPropertyChanged(nameof(Folders));
+                CollectLoadedFiles();
             }
         }
         private bool isfolderSelected;
@@ -29,6 +31,7 @@ namespace AudioPlayer.ViewModels
             set
             {
                 isfolderSelected = value;
+
                 OnPropertyChanged(nameof(IsFolderSelected));
             }
         }
@@ -45,13 +48,26 @@ namespace AudioPlayer.ViewModels
                 }
             }
         }
+        private static  Files selectedFile;
+        public static Files SelectedFile
+        {
+            get => selectedFile;
+            set
+            {
+                selectedFile = value;
+                OnStaticPropertyChanged();
+            
+            }
+        }
+       
         public ICommand AddNewDir => new RelayCommandBase(canExecute => true, execute => CreateDir());
         public ICommand DisplayFileName => new RelayCommandBase(canExecute => true, execute => OnFileSelected(execute));
 
+        public ICommand SelectedFileCmd=>new RelayCommandBase(canExecute=>true, execute => OnFileSelected(execute));
         public ICommand SelectedObj => new RelayCommandBase(canExecute => true, execute => DisplayBranch(execute));
         public TreeViewModel()
         {
-            string rootFolder = @"D:\testFolder";
+            string rootFolder = @"D:\Music";
             var rootDir = new DirectoryInfo(rootFolder);
             Folders = CreateTree(rootDir);
 
@@ -71,7 +87,7 @@ namespace AudioPlayer.ViewModels
             {
                 Folder.SubFolder.Add(CreateTree(subFolder));
             }
-            foreach (var file in rootDir.GetFiles())
+            foreach (var file in rootDir.GetFiles("*.mp3"))
             {
                 Folder.SubFolder.Add(new Files
                 {
@@ -84,14 +100,8 @@ namespace AudioPlayer.ViewModels
         }
         public void OnFileSelected(object parameter)
         {
-            if (parameter is Files selectedFile)
-            {
-                MessageBox.Show($"{selectedFile.FileName}");
-            }
-            else
-            {
-                MessageBox.Show("file not found");
-            }
+            var fileInfo = parameter as Files;
+            SelectedFile = fileInfo;
         }
         public void CreateDir()
         {
@@ -123,7 +133,18 @@ namespace AudioPlayer.ViewModels
         {
             IsFolderSelected = true;
             SelectedFolder = parameter as RootFolder;
-            MessageBox.Show(SelectedFolder.FolderName);
+        
+        }
+        public void CollectLoadedFiles()
+        {
+            foreach(var file in Folders.SubFolder)
+            {
+                if (file != null && file is Files audioFile)
+                {
+                    LoadedFileList.LoadedAudioList.Add(audioFile);
+                    LoadedFileList.OnLoadedAudioListChanged();
+                }
+            }
         }
     }
 }

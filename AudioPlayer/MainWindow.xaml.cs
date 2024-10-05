@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +23,7 @@ namespace AudioPlayer
             InitializeComponent();
         }
         public bool isNavigated = false;
+        public bool isPlayLisModelOpened = true;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation animation=new DoubleAnimation();
@@ -30,7 +32,7 @@ namespace AudioPlayer
             if (isNavigated)
             {
                 animation.From = TranslateNav.X;
-                animation.To = TranslateNav.X + 210;
+                animation.To = TranslateNav.X + 250;
 
                 isNavigated = false;
             }
@@ -42,6 +44,30 @@ namespace AudioPlayer
                 isNavigated = true;
             }
             TranslateNav.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            
+            DoubleAnimation animation = new DoubleAnimation();
+            animation.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+            animation.EasingFunction=new QuadraticEase { EasingMode=EasingMode.EaseOut };
+            if (isPlayLisModelOpened)
+            {
+                animation.From = PlayListModel.Y;
+                animation.To = PlayListModel.Y - 400;
+                isPlayLisModelOpened = false;
+               
+                Debug.WriteLine(isPlayLisModelOpened.ToString());
+            }
+            else
+            {
+                animation.From = PlayListModel.Y;
+                animation.To = 400;
+                isPlayLisModelOpened = true;
+                Debug.WriteLine(isPlayLisModelOpened.ToString());
+            }
+            PlayListModel.BeginAnimation(TranslateTransform.YProperty, animation);
         }
     }
 }

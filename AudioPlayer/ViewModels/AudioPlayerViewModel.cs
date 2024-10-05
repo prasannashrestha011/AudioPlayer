@@ -55,7 +55,7 @@ namespace AudioPlayer.ViewModels
             {
                 isPlaying = value;
                 OnPropertyChanged(nameof(IsPlaying));
-               
+                Debug.WriteLine($"{IsPlaying} has changed");
             }
         }
      
@@ -85,7 +85,8 @@ namespace AudioPlayer.ViewModels
         {
            
             this.mainNavStore = mainNavStore;
-
+            TreeViewModel.StaticPropertyChanged += OnFileSelected;
+            LoadedFileList.LoadedAudioListChanged += LoadedFolderFiles;
         }
         
         public void OpenFileHandler()
@@ -100,7 +101,7 @@ namespace AudioPlayer.ViewModels
                
                 SelectedFileName = Path.GetFileName(selectedFilePath);
                 PlayListStruct playListStruct = new PlayListStruct(SelectedFileName, SelectedFilePath);
-                AudioLocalStorage.SavePlayListToLocalStorage("__AudioPlayList_ss_.txt", playListStruct);
+                
                 AudioPlayer.MediaOpened += GetAudioDuration;
 
                 AudioPlayer.Open(new Uri(SelectedFilePath));
@@ -116,13 +117,17 @@ namespace AudioPlayer.ViewModels
         
             try
             {
-                if (!IsPlaying&&AudioPlayer!=null && AudioPlayer.HasAudio)
+                if (!AudioSlider.IsPlaying&&AudioPlayer!=null && AudioPlayer.HasAudio)
                 {
-                    
+                    Debug.WriteLine("working....");
                     AudioPlayer.Play();
-                    IsPlaying = true;
+                    AudioSlider.IsPlaying = true;
                     AudioSlider.audioDispatcherTime.Start();
                     AudioSlider.EscalatePointer();
+                }
+                else
+                {
+                    Debug.WriteLine("not ready"); 
                 }
             }
             catch(Exception ex)
@@ -131,11 +136,12 @@ namespace AudioPlayer.ViewModels
                 
             }
         }
+       
         public void PauseSelectedAudio()
         {
-            if (IsPlaying)
+            if (AudioSlider.IsPlaying)
             {
-                IsPlaying = false;
+                AudioSlider.IsPlaying = false;
                 AudioPlayer.Pause();
                 AudioSlider.audioDispatcherTime.Stop();
                AudioSlider.StopPointer();
@@ -163,8 +169,9 @@ namespace AudioPlayer.ViewModels
             {
                 var audioDuration = AudioPlayer.NaturalDuration.TimeSpan.TotalSeconds;
                 var timeSpan = Utils.FormatTime(audioDuration);
-                  
-                AudioSlider = new ProgressSlider(0, audioDuration, timeSpan, false,IsPlaying,AudioPlayer);
+              
+                AudioSlider = new ProgressSlider(0, audioDuration, timeSpan  , false, false, AudioPlayer);
+           
                 AudioSlider.UpdateTimeSpanLeft();
 
                 AudioSlider.timer.Elapsed += AudioSlider.MoveThumb;
@@ -183,14 +190,65 @@ namespace AudioPlayer.ViewModels
             if (AudioPlayer.Position.Equals(TimeSpan.FromSeconds(AudioSlider.AudioDuration)))
             {
                 AudioPlayer.Close();
-                isPlaying = false;
+                AudioSlider.IsPlaying = false;
             }
         }
 
-        
-       
-       
-        
+        private async void OnFileSelected()
+        {
+            AudioSlider.IsPlaying = false;
+           SelectedFileName=TreeViewModel.SelectedFile.FileName;
+           SelectedFilePath=TreeViewModel.SelectedFile.FilePath;
+            AudioPlayer.Open(new Uri(SelectedFilePath));
+            await WaitForMediaOpened();
+           PlaySelectedAudio();
 
+        }
+
+
+        private Task WaitForMediaOpened()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+   
+            void OnMediaOpened(object sender, EventArgs e)
+            {
+                AudioPlayer.MediaOpened -= OnMediaOpened;
+                tcs.SetResult(true);
+                GetAudioDuration(sender, e);
+            }
+            AudioPlayer.MediaOpened += OnMediaOpened;
+            return tcs.Task;
+        }
+        private int currentIdx = 0;
+        private async void LoadedFolderFiles()
+        {
+            
+            AudioPlayer.MediaEnded -= Media_Ended;
+            AudioPlayer.MediaEnded += Media_Ended;
+            if (LoadedFileList.LoadedAudioList != null && LoadedFileList.LoadedAudioList.Count>0)
+            {
+                SelectedFileName = LoadedFileList.LoadedAudioList[currentIdx].FileName;
+                SelectedFilePath = LoadedFileList.LoadedAudioList[currentIdx].FilePath;
+                AudioPlayer.Open(new Uri(SelectedFilePath));
+                await WaitForMediaOpened();
+            }
+        }
+        private void Media_Ended(object sender, EventArgs e)
+        {
+            currentIdx++;
+            if (currentIdx < LoadedFileList.LoadedAudioList.Count)
+            {
+                PlayInQueue();
+            }
+        }
+        private async void PlayInQueue()
+        {
+            SelectedFileName = LoadedFileList.LoadedAudioList[currentIdx].FileName;
+            SelectedFilePath = LoadedFileList.LoadedAudioList[currentIdx].FilePath;
+            AudioPlayer.Open(new Uri(SelectedFilePath));
+            await WaitForMediaOpened();
+            PlaySelectedAudio();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AudioPlayer.Structure;
 using AudioPlayer.ViewModels;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -100,42 +101,57 @@ namespace AudioPlayer.Views
             }
             else if (e.Data.GetDataPresent(typeof(RootFolder)) || e.Data.GetDataPresent(typeof(Files))) // Internal drag and drop
             {
+                Debug.WriteLine("internal");
                 var droppedItem = e.Data.GetData(typeof(RootFolder)) as RootFolder ?? e.Data.GetData(typeof(Files)) as Files;
                 var targetItem = GetNearestContainer(e.OriginalSource as UIElement);
                 var targetFolder = targetItem?.DataContext as RootFolder ?? (DataContext as TreeViewModel)?.Folders;
+                Debug.WriteLine($"Dropped Item Type: {droppedItem?.GetType().Name}");
+                Debug.WriteLine($"Target Folder: {targetFolder?.FolderPath}");
 
-                if (targetFolder != null && droppedItem != null && !IsDescendantOf(droppedItem, targetFolder))
-                {
-                    string sourcePath = droppedItem is Files fileItem ? fileItem.FilePath : (droppedItem as RootFolder).FolderPath;
-                    string targetPath = Path.Combine(targetFolder.FolderPath, Path.GetFileName(sourcePath));
-
-                    // Remove the item from its original location
-                    RemoveItemFromOriginalLocation(droppedItem);
-
-                    try
+                try {
+                    if (targetFolder != null && droppedItem != null)
                     {
-                        if (droppedItem is Files file)
-                        {
-                            // Move the file to the new folder on disk
-                            File.Move(file.FilePath, targetPath);
+                        string sourcePath = droppedItem is Files fileItem ? fileItem.FilePath : (droppedItem as RootFolder).FolderPath;
+                        string targetPath = Path.Combine(targetFolder.FolderPath, Path.GetFileName(sourcePath));
 
-                            // Add the file to the target folder in TreeView
-                            targetFolder.SubFolder.Add(new Files { FileName = file.FileName, FilePath = targetPath });
+
+                        RemoveItemFromOriginalLocation(droppedItem);
+
+                        try
+                        {
+                            if (droppedItem is Files file)
+                            {
+
+                                File.Move(file.FilePath, targetPath);
+
+                                // Add the file to the target folder in TreeView
+                                targetFolder.SubFolder.Add(new Files { FileName = file.FileName, FilePath = targetPath });
+                            }
+                            else if (droppedItem is RootFolder folder)
+                            {
+
+                                Directory.Move(folder.FolderPath, targetPath);
+
+
+                                targetFolder.SubFolder.Add(folder);
+                            }
                         }
-                        else if (droppedItem is RootFolder folder)
+                        catch (IOException ex)
                         {
-                            // Move the folder to the new folder on disk
-                            Directory.Move(folder.FolderPath, targetPath);
-
-                            // Add the folder to the target folder in TreeView
-                            targetFolder.SubFolder.Add(folder);
+                            MessageBox.Show($"Error moving file or folder: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    catch (IOException ex)
-                    {
-                        MessageBox.Show($"Error moving file or folder: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+
                 }
+                catch(Exception err)
+                {
+                    Debug.WriteLine(err.Message);
+                    return;
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Invalid data format for drop.");
             }
         }
 
@@ -169,6 +185,7 @@ namespace AudioPlayer.Views
 
         private bool IsDescendantOf(object item, RootFolder folder)
         {
+            Debug.WriteLine($"Checking if {item} is descendant of {folder.FolderName}");
             if (item == folder) return true;
             if (folder.SubFolder == null) return false;
             return folder.SubFolder.Any(subFolder => IsDescendantOf(item, subFolder));

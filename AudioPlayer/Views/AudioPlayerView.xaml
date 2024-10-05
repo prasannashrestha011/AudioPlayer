@@ -75,7 +75,7 @@
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
+                                    <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
                                         <Setter Property="Content">
                                             <Setter.Value>
                                                 <Button 
@@ -86,7 +86,7 @@
                                             </Setter.Value>
                                         </Setter>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                                    <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
                                         <Setter Property="Content">
                                             <Setter.Value>
                                                 <Button 
