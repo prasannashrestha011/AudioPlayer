@@ -2,6 +2,7 @@
 using AudioPlayer.RelayBase;
 using AudioPlayer.Structure;
 using AudioPlayer.Utilities;
+using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
@@ -48,6 +49,7 @@ namespace AudioPlayer.ViewModels
                 }
             }
         }
+        //to play the selected audiofile from treeview model to audioplayerview model
         private static  Files selectedFile;
         public static Files SelectedFile
         {
@@ -59,6 +61,7 @@ namespace AudioPlayer.ViewModels
             
             }
         }
+        //assist the audioplayerviewmodel for getting selected file idx from the parent folder(for autoplaying mode)
         private static int selectedFileIndex;
         public static int SelectedFileIndex
         {
@@ -109,16 +112,51 @@ namespace AudioPlayer.ViewModels
             }
             return Folder;
         }
+        //this function gets triggered whenever user select the audio file from treeview
         public void OnFileSelected(object parameter)
         {
             var fileInfo = parameter as Files;
-            SelectedFileIndex = Folders.SubFolder.IndexOf(fileInfo)-1;
-            Debug.WriteLine($"{SelectedFileIndex} is current index");
-            SelectedFile = fileInfo;
+            var ResultedFile = TriverseToFindSelectedFile(Folders, fileInfo);
+            
+            (SelectedFile, var SelectedFolder)= ResultedFile;
+            //assigning the the dir that contains the selectedfile
+            LoadedFileList.LoadedAudioList = SelectedFolder;
+            //getting the file idx from parent folder for autoplaying mode
+            SelectedFileIndex = SelectedFolder.SubFolder.IndexOf(SelectedFile);
+        }
+        //triverse and compare to obtain selected file from dir
+        private (Files file,RootFolder folder) TriverseToFindSelectedFile(RootFolder currentDir,Files selectedFileName)
+        {
+     
+            if(currentDir.SubFolder!= null)
+            {
+                for(int i = 0; i < currentDir.SubFolder.Count; i++)
+                {
+                    //iterate over each subfolder
+                    var subFolder = currentDir.SubFolder[i];
+                   
+                    if(subFolder is Files targetFile && string.Equals(targetFile.FileName, selectedFileName.FileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        //obtain the target file and its dir for autoplaying mode
+                        return (targetFile,currentDir);
+                    }
+                    else
+                    { //triverse on children folder to compare the files
+                        var result = TriverseToFindSelectedFile(subFolder, selectedFileName);
+                        if (result.file != null)
+                        {
+                            MessageBox.Show($"{result.folder.FolderName}");
+                            return result;
+                        }
+                    }
+                }
+            }
+  
+            return (null, null);
         }
         public void CreateDir()
         {
-            if (IsFolderSelected)
+            if (IsFolderSelected)//for creating sub folder 
             {
 
                 var folderInfo = SelectedFolder;
@@ -148,13 +186,13 @@ namespace AudioPlayer.ViewModels
             SelectedFolder = parameter as RootFolder;
         
         }
-        public void CollectLoadedFiles()
+        public void CollectLoadedFiles()//initial treeview
         {
             foreach(var file in Folders.SubFolder)
             {
                 if (file != null && file is Files audioFile)
                 {
-                    LoadedFileList.LoadedAudioList.Add(audioFile);
+                    LoadedFileList.LoadedAudioList.SubFolder.Add(audioFile);
                     LoadedFileList.OnLoadedAudioListChanged();
                 }
             }

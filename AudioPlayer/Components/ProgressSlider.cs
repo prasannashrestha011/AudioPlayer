@@ -110,7 +110,7 @@ namespace AudioPlayer.Components
         public void EnableCursorMovement()
         {
             IsMoving = true;
-            IsPlaying = true;
+        
         }
         public void UpdateTimeSpanLeft()
         {
@@ -137,7 +137,7 @@ namespace AudioPlayer.Components
                 
                 var currentTimeSpan = AudioDuration - CurrentPosition;
                 AudioTimeSpanStr = Utils.FormatTime(currentTimeSpan);
-                Debug.WriteLine(AudioPlayer.Position,"after minus");
+                
             }
             else
             {
@@ -167,8 +167,7 @@ namespace AudioPlayer.Components
                    
                         audioDispatcherTime.Stop();
                         timer.Stop();
-                       
-                        Debug.WriteLine("running in Movethumb");
+               
                        
                     }
 
