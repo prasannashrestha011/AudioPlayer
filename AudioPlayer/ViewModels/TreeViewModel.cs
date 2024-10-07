@@ -71,6 +71,7 @@ namespace AudioPlayer.ViewModels
             
             }
         }
+
         //assist the audioplayerviewmodel for getting selected file idx from the parent folder(for autoplaying mode)
         private static int selectedFileIndex;
         public static int SelectedFileIndex

@@ -11,16 +11,29 @@
              mc:Ignorable="d" 
          
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../UI_Designs/PlayButtonUi.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddNewDir}" Content="Add"/>
-            <Button Command="{Binding DeleteDirCmd}" Content="Delete"/>
-            <Button Command="{Binding ChangeRootDirCmd}" Content="Open"/>
-            
+            <Button Command="{Binding AddNewDir}" Style="{StaticResource TransparentBackground}" >
+                <Image Source="../ImageSource/Folder&amp;FileIcons/createFolder.png" RenderOptions.BitmapScalingMode="HighQuality" />
+            </Button>
+            <Button Command="{Binding DeleteDirCmd}"  Style="{StaticResource TransparentBackground}" >
+                <Image Source="../ImageSource/Folder&amp;FileIcons/deleteFolder.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Button>
+            <Button Command="{Binding ChangeRootDirCmd}"  Style="{StaticResource TransparentBackground}">
+                <Image Source="../ImageSource/Folder&amp;FileIcons/openFolderRoot.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Button>
+          
         </StackPanel>
         <TreeView 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"

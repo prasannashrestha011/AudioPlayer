@@ -11,7 +11,9 @@
   <ItemGroup>
     <None Remove="ImageSource\AppIcon\icon.ico" />
     <None Remove="ImageSource\back.png" />
+    <None Remove="ImageSource\Folder&amp;FileIcons\createFolder.png" />
     <None Remove="ImageSource\Folder&amp;FileIcons\folder.ico" />
+    <None Remove="ImageSource\Folder&amp;FileIcons\openFolderRoot.png" />
     <None Remove="ImageSource\front.png" />
     <None Remove="ImageSource\NavIcons\ham.png" />
     <None Remove="ImageSource\pausebutton.png" />
@@ -21,8 +23,7 @@
     <None Remove="ImageSource\seekButtons\active_front.png" />
     <None Remove="ImageSource\seekButtons\back.png" />
     <None Remove="ImageSource\seekButtons\front.png" />
-    <None Remove="ImageSource\Trash2\mainthumbnail.png" />
-    <None Remove="ImageSource\Trash\file.ico" />
+    <None Remove="ImageSource\Trash2\createFolder.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,9 @@
 
   <ItemGroup>
     <Resource Include="ImageSource\AppIcon\icon.ico" />
+    <Resource Include="ImageSource\Folder&amp;FileIcons\createFolder.png" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\folder.ico" />
+    <Resource Include="ImageSource\Folder&amp;FileIcons\openFolderRoot.png" />
     <Resource Include="ImageSource\NavIcons\ham.png" />
     <Resource Include="ImageSource\pausebutton.png" />
     <Resource Include="ImageSource\playbutton.png" />
@@ -43,6 +46,7 @@
     <Resource Include="ImageSource\seekButtons\front.png" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\file.ico" />
     <Resource Include="ImageSource\mainThumbnail\mainthumbnail.png" />
+    <Resource Include="ImageSource\Folder&amp;FileIcons\deleteFolder.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +57,7 @@
 
   <ItemGroup>
     <Folder Include="ImageSource\Trash2\" />
-    <Folder Include="ImageSource\Trash\" />
+    <Folder Include="ImageSource\trash\" />
   </ItemGroup>
 
 </Project>
