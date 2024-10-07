@@ -54,7 +54,7 @@ namespace AudioPlayer.Components
             {
                 isPlaying = value;
                 OnPropertyChanged(nameof(IsPlaying));
-                Debug.WriteLine($"{IsPlaying} has changed from progress slider");
+             
             }
         }
         private bool isMoving;
@@ -116,7 +116,7 @@ namespace AudioPlayer.Components
         {
              audioDispatcherTime = new DispatcherTimer();
             audioDispatcherTime.Interval = TimeSpan.FromSeconds(1);
-            Debug.WriteLine(IsMoving);
+        
             if (!IsMoving)
             {
 

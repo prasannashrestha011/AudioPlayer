@@ -2,18 +2,28 @@
 using AudioPlayer.RelayBase;
 using AudioPlayer.Structure;
 using AudioPlayer.Utilities;
-using System.Collections.ObjectModel;
-using System.Data.Common;
+using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using AudioPlayer.LocalStorage;
 
 namespace AudioPlayer.ViewModels
 {
     public class TreeViewModel : ViewModelBase
     {
+        private string defaultrootFolder;
+        public string DefaultRootFolder
+        {
+            get => defaultrootFolder;
+            set
+            {
+                defaultrootFolder = value;
+                OnPropertyChanged();
+            }
+        }
         private RootFolder folders;
         public RootFolder Folders
         {
@@ -76,19 +86,39 @@ namespace AudioPlayer.ViewModels
        
         public ICommand AddNewDir => new RelayCommandBase(canExecute => true, execute => CreateDir());
         public ICommand DisplayFileName => new RelayCommandBase(canExecute => true, execute => OnFileSelected(execute));
-
+        public ICommand ChangeRootDirCmd => new RelayCommandBase(canExecute => true, execute => ChangeRootFolder());
         public ICommand SelectedFileCmd=>new RelayCommandBase(canExecute=>true, execute => OnFileSelected(execute));
         public ICommand SelectedObj => new RelayCommandBase(canExecute => true, execute => DisplayBranch(execute));
+        public ICommand UnFocusValueCmd => new RelayCommandBase(canExecute => true, execute=> UnFocusValue());
+        public ICommand DeleteDirCmd => new RelayCommandBase(canExecute => true, execute => DeleteDir());
+     
         public TreeViewModel()
         {
-            string rootFolder = @"D:\Music";
-            var rootDir = new DirectoryInfo(rootFolder);
-            Folders = CreateTree(rootDir);
-
-            foreach (var folder in Folders.SubFolder)
+            
+            DefaultRootFolder = UserDataLocalStorage.LoadUserRootPath("rootPath.txt") ?? $@"C:\Users\{Environment.UserName}\Music";
+            LoadTreeView();
+           
+        }
+        private void ChangeRootFolder()
+        {
+            using (CommonOpenFileDialog dialog = new CommonOpenFileDialog())
             {
-                Debug.WriteLine(folder.FolderName, " is your folders");
+                dialog.IsFolderPicker = true;
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    
+                    DefaultRootFolder = Path.GetFullPath(dialog.FileName);
+                    UserDataLocalStorage.SaveUserRootPath("rootPath.txt", DefaultRootFolder);
+                    LoadTreeView();
+                }
             }
+
+
+        }
+        private void LoadTreeView()
+        {
+            var rootDir = new DirectoryInfo(DefaultRootFolder);
+            Folders = CreateTree(rootDir);
         }
         public RootFolder CreateTree(DirectoryInfo rootDir)
         {
@@ -171,20 +201,45 @@ namespace AudioPlayer.ViewModels
                     };
                     folderInfo.SubFolder.Add(newFolder);
                     Directory.CreateDirectory(newfolderPath);
+                    return;
                 }
                 else
                 {
                     Debug.WriteLine("null");
                 }
-
+              
+            }
+            string newFolderName = "New Folder";
+            string newFolderPath = Path.Combine(defaultrootFolder, newFolderName);
+            Folders.SubFolder.Add(new RootFolder
+            {
+                FolderName = newFolderName,
+                FolderPath = newFolderPath,
+                
+            });
+            Directory.CreateDirectory(newFolderPath);
+        }
+        public void DeleteDir()
+        {
+            if (IsFolderSelected)
+            {
+                Directory.Delete(SelectedFolder.FolderPath,true);
+                LoadTreeView();
+               
             }
         }
-
+        
         public void DisplayBranch(object parameter)
         {
             IsFolderSelected = true;
             SelectedFolder = parameter as RootFolder;
         
+        }
+        private void UnFocusValue()
+        {
+            IsFolderSelected = false;
+            SelectedFolder = null;
+         
         }
         public void CollectLoadedFiles()//initial treeview
         {

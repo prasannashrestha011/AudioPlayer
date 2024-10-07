@@ -56,7 +56,7 @@ namespace AudioPlayer.ViewModels
             {
                 isPlaying = value;
                 OnPropertyChanged(nameof(IsPlaying));
-                Debug.WriteLine($"{IsPlaying} has changed");
+            
             }
         }
      
@@ -77,11 +77,12 @@ namespace AudioPlayer.ViewModels
 
         public ICommand FastForwardCmd => new RelayCommandBase(canExecute => true, execute => FastForward());
         public ICommand BackForwardCmd => new RelayCommandBase(canExecute => true, execute => BackAudio());
-
+        public ICommand PlayNextAudioCmd => new RelayCommandBase(canExecute => true, execute => PlayNextAudio());
+        public ICommand PlayPrevAudioCmd => new RelayCommandBase(canExecute => true, execute => PlayPrevAudio());
         public ICommand EnableSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer != null; }, execute => AudioSlider.EnableCursorMovement());
         public ICommand MoveSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer!=null; }, execute => AudioSlider.MoveSliderCursor());
         public ICommand DisableSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer != null; }, execute => AudioSlider.DisableCursorMovement());
-        
+        private int currentIdx = TreeViewModel.SelectedFileIndex;
         public AudioPlayerViewModel(MainNavigationStore mainNavStore)
         {
            
@@ -89,8 +90,26 @@ namespace AudioPlayer.ViewModels
             TreeViewModel.StaticPropertyChanged += OnFileSelected;
             LoadedFileList.LoadedAudioListChanged += LoadedFolderFiles;
             AudioSlider = new ProgressSlider(0, 1, "0:0", false, false, AudioPlayer);
+            TreeViewModel.StaticPropertyChanged += () =>
+            {
+                Debug.WriteLine($"view model change:{TreeViewModel.SelectedFileIndex}");
+            };
         }
-        
+        // get the folder files from user's dir
+        private async void LoadedFolderFiles()
+        {
+
+            AudioPlayer.MediaEnded -= Media_Ended;
+            AudioPlayer.MediaEnded += Media_Ended;
+            if (LoadedFileList.LoadedAudioList != null && LoadedFileList.LoadedAudioList.SubFolder.Count > 0 && LoadedFileList.LoadedAudioList.SubFolder[TreeViewModel.SelectedFileIndex] is Files audioFile)
+            {
+
+                SelectedFileName = audioFile.FileName;
+                SelectedFilePath = audioFile.FilePath;
+                AudioPlayer.Open(new Uri(SelectedFilePath));
+                await WaitForMediaOpened();
+            }
+        }
         public void OpenFileHandler()
         {
             try
@@ -121,7 +140,7 @@ namespace AudioPlayer.ViewModels
             {
                 if (!AudioSlider.IsPlaying&&AudioPlayer!=null && AudioPlayer.HasAudio)
                 {
-                 
+                   
                     AudioPlayer.Play();
                     AudioSlider.IsPlaying = true;
                     AudioSlider.audioDispatcherTime.Start();
@@ -160,9 +179,48 @@ namespace AudioPlayer.ViewModels
             AudioPlayer.Position += TimeSpan.FromSeconds(10);
             AudioSlider.CurrentPosition += 10;
         }
+        private void PlayPrevAudio()
+        {
+            if (LoadedFileList.LoadedAudioList.SubFolder.Count > 0)
+            {
+                if (TreeViewModel.SelectedFileIndex > 0)
+                {
+                    TreeViewModel.SelectedFileIndex--;
+                }
+                else
+                {
+                    // If we're at the first track, wrap around to the last track
+                    TreeViewModel.SelectedFileIndex = 0;
+                }
 
+                Debug.WriteLine($"index->{TreeViewModel.SelectedFileIndex} after");
+                ChangeAndPlay(TreeViewModel.SelectedFileIndex);
+            }
+        }
+        private void PlayNextAudio()
+        {
+            Debug.WriteLine($"index->{TreeViewModel.SelectedFileIndex} before");
+            if (TreeViewModel.SelectedFileIndex <LoadedFileList.LoadedAudioList.SubFolder.Count)
+            {
+                TreeViewModel.SelectedFileIndex++;
+                Debug.WriteLine($"index->{TreeViewModel.SelectedFileIndex} after");
+                ChangeAndPlay(TreeViewModel.SelectedFileIndex);
+            }
+            else
+            {
 
+                AudioPlayer.MediaEnded -= Media_Ended;
+            }
+        }
 
+        public void ExitCurrentAudio()
+        {
+            if (AudioPlayer.Position.Equals(TimeSpan.FromSeconds(AudioSlider.AudioDuration)))
+            {
+                AudioPlayer.Close();
+                AudioSlider.IsPlaying = false;
+            }
+        }
 
         public  void GetAudioDuration(object sender, EventArgs e)
         {
@@ -187,18 +245,12 @@ namespace AudioPlayer.ViewModels
             }
         }
 
-        public void ExitCurrentAudio()
-        {
-            if (AudioPlayer.Position.Equals(TimeSpan.FromSeconds(AudioSlider.AudioDuration)))
-            {
-                AudioPlayer.Close();
-                AudioSlider.IsPlaying = false;
-            }
-        }
+     
 
         private async void OnFileSelected()
         {
-            currentIdx = TreeViewModel.SelectedFileIndex; 
+         
+         
             AudioSlider.IsPlaying = false;
             SelectedFileName = TreeViewModel.SelectedFile.FileName;
            SelectedFilePath = TreeViewModel.SelectedFile.FilePath;
@@ -223,41 +275,77 @@ namespace AudioPlayer.ViewModels
             AudioPlayer.MediaOpened += OnMediaOpened;
             return tcs.Task;
         }
-        private int currentIdx = TreeViewModel.SelectedFileIndex;
-
-        private async void LoadedFolderFiles()
+     
+        //for playing next or previous audio
+        private async void ChangeAndPlay(int targetIdx)
         {
-        
-            AudioPlayer.MediaEnded -= Media_Ended;
-            AudioPlayer.MediaEnded += Media_Ended;
-            if (LoadedFileList.LoadedAudioList != null && LoadedFileList.LoadedAudioList.SubFolder.Count>0 && LoadedFileList.LoadedAudioList.SubFolder[currentIdx] is Files audioFile)
+
+       
+
+          
+            AudioPlayer.Pause();
+           
+          if(targetIdx >= 0&& targetIdx < LoadedFileList.LoadedAudioList.SubFolder.Count)
             {
-                
-                SelectedFileName = audioFile.FileName;
-                SelectedFilePath = audioFile.FilePath;
-                AudioPlayer.Open(new Uri(SelectedFilePath));
-                await WaitForMediaOpened();
+                var audiofile = LoadedFileList.LoadedAudioList.SubFolder[TreeViewModel.SelectedFileIndex];
+      
+                if (targetIdx >= 0 && targetIdx < LoadedFileList.LoadedAudioList.SubFolder.Count)
+                {
+                    var audioFile = LoadedFileList.LoadedAudioList.SubFolder[targetIdx] as Files;
+                    var initialFile= LoadedFileList.LoadedAudioList.SubFolder[0]as Files;
+                    Debug.WriteLine("\n");
+               
+                    if (audioFile != null)
+                    {
+                       
+                        SelectedFileName = audioFile.FileName;
+                        SelectedFilePath = audioFile.FilePath;
+                        PlayInQueue();
+                    }
+                }
             }
         }
+
+     
         private void Media_Ended(object sender, EventArgs e)
         {
-            currentIdx++;
-     
-            if (currentIdx < LoadedFileList.LoadedAudioList.SubFolder.Count)
+            TreeViewModel.SelectedFileIndex++;
+            Debug.WriteLine($"Autio play: {TreeViewModel.SelectedFileIndex} ");
+            if (TreeViewModel.SelectedFileIndex < LoadedFileList.LoadedAudioList.SubFolder.Count)
             {
                 PlayInQueue();
+            }
+            else
+            {
+                TreeViewModel.SelectedFileIndex = 0;
+                AudioPlayer.Close();
             }
         }
         private async void PlayInQueue()
         {
-            if (LoadedFileList.LoadedAudioList.SubFolder[currentIdx]!=null && LoadedFileList.LoadedAudioList.SubFolder[currentIdx] is Files audioFile)
+           var currentAudio= LoadedFileList.LoadedAudioList.SubFolder[TreeViewModel.SelectedFileIndex] as Files;
+
+           foreach(Files file in LoadedFileList.LoadedAudioList.SubFolder)
             {
+                if (file != null)
+                {
+                    Debug.WriteLine(file.FileName);
+                }
+            }
+            if (LoadedFileList.LoadedAudioList.SubFolder[TreeViewModel.SelectedFileIndex] !=null && LoadedFileList.LoadedAudioList.SubFolder[TreeViewModel.SelectedFileIndex] is Files audioFile)
+            {
+
                 SelectedFileName = audioFile.FileName;
                 SelectedFilePath = audioFile.FilePath;
                 AudioPlayer.Open(new Uri(SelectedFilePath));
                 await WaitForMediaOpened();
                 PlaySelectedAudio();
             }
+            else
+            {
+                Debug.WriteLine("not working/////////////////");
+            }
+            
         }
     }
 }

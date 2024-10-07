@@ -16,7 +16,12 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Command="{Binding AddNewDir}" Content="Add"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding AddNewDir}" Content="Add"/>
+            <Button Command="{Binding DeleteDirCmd}" Content="Delete"/>
+            <Button Command="{Binding ChangeRootDirCmd}" Content="Open"/>
+            
+        </StackPanel>
         <TreeView 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
         x:Name="FileExplorerTreeView"
@@ -61,7 +66,11 @@
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>
-            
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding DataContext.UnFocusValueCmd ,RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TreeView>
 
 

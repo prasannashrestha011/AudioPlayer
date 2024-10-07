@@ -90,42 +90,54 @@
             </StackPanel>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Width="50"  Command="{Binding BackForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                <Button 
+                    Command="{Binding PlayPrevAudioCmd}"
+                    Width="35"  Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                     <Image Source="../ImageSource/seekButtons/back.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Button>
-                <StackPanel Orientation="Vertical" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0"  MinWidth="130" >
-                    <ContentControl>
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <Button 
-                                                      Style="{StaticResource PlayButtonUi  }"
-                                                    Command="{Binding PauseAudioCommand}">
-                                                    <Image Source="../ImageSource/pausebutton.png" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                                </Button>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <Button 
-                                                    Style="{StaticResource PlayButtonUi  }"
-                                                    Command="{Binding PlayAudioCommand,UpdateSourceTrigger=PropertyChanged}">
-                                                    <Image Source="../ImageSource/playbutton.png" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                </Button>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
+                <StackPanel Orientation="Horizontal" Width="Auto" Margin="35,0,35,0">
+                    <Button Width="50"  Command="{Binding BackForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                        <Image Source="../ImageSource/seekButtons/back.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Button>
+                    <StackPanel Orientation="Vertical" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0"  MinWidth="130" >
+                        <ContentControl>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Button 
+                       Style="{StaticResource PlayButtonUi  }"
+                     Command="{Binding PauseAudioCommand}">
+                                                        <Image Source="../ImageSource/pausebutton.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                    </Button>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding AudioSlider.IsPlaying,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Button 
+                     Style="{StaticResource PlayButtonUi  }"
+                     Command="{Binding PlayAudioCommand,UpdateSourceTrigger=PropertyChanged}">
+                                                        <Image Source="../ImageSource/playbutton.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                    </Button>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </StackPanel>
+                    <Button Width="50"   Command="{Binding FastForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                        <Image Source="../ImageSource/seekButtons/front.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Button>
                 </StackPanel>
-                <Button Width="50"   Command="{Binding FastForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                <Button 
+                    Command="{Binding PlayNextAudioCmd}"
+                    Width="35"   Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                     <Image Source="../ImageSource/seekButtons/front.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Button>
             </StackPanel>
