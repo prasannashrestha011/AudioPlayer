@@ -42,10 +42,10 @@
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding AudioSlider.IsPlaying}" Value="True">
                                     <DataTrigger.EnterActions>
-                                        <BeginStoryboard >
+                                        <BeginStoryboard x:Name="rotateStoryboard">
                                             <Storyboard RepeatBehavior="Forever">
                                                 <DoubleAnimation
-                                   Storyboard.TargetProperty="Angle"
+                                   Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
                                    From="0"
                                    To="360"
                                    />
@@ -53,7 +53,7 @@
                                         </BeginStoryboard>
                                     </DataTrigger.EnterActions>
                                     <DataTrigger.ExitActions>
-                                        <StopStoryboard/>
+                                        <StopStoryboard  BeginStoryboardName="rotateStoryboard"/>
                                     </DataTrigger.ExitActions>
                                 </DataTrigger>
                             </Style.Triggers>
