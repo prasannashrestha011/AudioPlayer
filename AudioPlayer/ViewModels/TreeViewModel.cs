@@ -176,7 +176,7 @@ namespace AudioPlayer.ViewModels
                         var result = TriverseToFindSelectedFile(subFolder, selectedFileName);
                         if (result.file != null)
                         {
-                            MessageBox.Show($"{result.folder.FolderName}");
+                            
                             return result;
                         }
                     }

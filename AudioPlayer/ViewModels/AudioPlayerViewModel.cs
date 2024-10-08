@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using AudioPlayer.Structure;
 using AudioPlayer.LocalStorage;
 using System;
+using System.Threading;
 namespace AudioPlayer.ViewModels
 {
     public class AudioPlayerViewModel : ViewModelBase
@@ -70,7 +71,7 @@ namespace AudioPlayer.ViewModels
                 OnPropertyChanged(nameof (AudioSlider));
             }
         }
-        private bool isAutoPlayMode=false;
+        private bool isAutoPlayMode;
         public bool IsAutoPlayMode
         {
             get => isAutoPlayMode;
@@ -78,6 +79,39 @@ namespace AudioPlayer.ViewModels
             {
                 isAutoPlayMode = value;
                 OnPropertyChanged(nameof(IsAutoPlayMode));
+                UserDataLocalStorage.SaveAutoPlayModeState("autoPlayModeState.txt", IsAutoPlayMode.ToString());
+                Debug.WriteLine($"{IsAutoPlayMode.ToString()} is your current autoplay state");
+            }
+        }
+        private bool isVolumeManagerEnb;
+        public bool IsVolumeManagerEnb
+        {
+            get => isVolumeManagerEnb;
+            set
+            {
+                isVolumeManagerEnb = value;
+                OnPropertyChanged();
+            }
+        }
+        private Double volumeLvl;
+        public Double VolumeLvl
+        {
+            get => volumeLvl;
+            set
+            {
+                volumeLvl = value;
+                OnPropertyChanged();
+                CheckVolumeRange();
+            }
+        }
+        private string volumeRange = "mute";
+        public string VolumeRange
+        {
+            get => volumeRange;
+            set
+            {
+                volumeRange = value;
+                OnPropertyChanged();
             }
         }
         public ICommand PlayAudioCommand => new RelayCommandBase(canExecute => true, execute => PlaySelectedAudio());
@@ -91,7 +125,13 @@ namespace AudioPlayer.ViewModels
         public ICommand EnableSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer != null; }, execute => AudioSlider.EnableCursorMovement());
         public ICommand MoveSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer!=null; }, execute => AudioSlider.MoveSliderCursor());
         public ICommand DisableSliderCursor => new RelayCommandBase(canExecute => { return AudioSlider != null && AudioPlayer != null; }, execute => AudioSlider.DisableCursorMovement());
-        public ICommand AutoPlayCmd => new RelayCommandBase(canExecute => true, execute => ToggleAutoPlayMode());
+      
+
+        //volumeManager
+        public ICommand EnableVolumeCmd => new RelayCommandBase(canExecute => true, execute => EnableVolumeSlider());
+        public ICommand ToggleVolumeCmd => new RelayCommandBase(canExecute => true, execute => ChangeVolumeLvl());
+        public ICommand DisableVolumeCmd => new RelayCommandBase(canExecute => true, execute => DisableVolumeSlider());
+
         private int currentIdx = TreeViewModel.SelectedFileIndex;
         public AudioPlayerViewModel(MainNavigationStore mainNavStore)
         {
@@ -100,11 +140,8 @@ namespace AudioPlayer.ViewModels
             TreeViewModel.StaticPropertyChanged += OnFileSelected;
             LoadedFileList.LoadedAudioListChanged += LoadedFolderFiles;
             AudioSlider = new ProgressSlider(0, 1, "0:0", false, false, AudioPlayer);
-            MessageBox.Show($"{AudioSlider.IsPlaying.ToString()}");
-            TreeViewModel.StaticPropertyChanged += () =>
-            {
-                Debug.WriteLine($"view model change:{TreeViewModel.SelectedFileIndex}");
-            };
+            IsAutoPlayMode = UserDataLocalStorage.LoadAutoPlayModeState("autoPlayModeState.txt");
+            Debug.WriteLine($"{IsAutoPlayMode.ToString()} is your current autoplay state");
         }
         // get the folder files from user's dir
         private async void LoadedFolderFiles()
@@ -154,8 +191,8 @@ namespace AudioPlayer.ViewModels
                    
                     AudioPlayer.Play();
                     AudioSlider.IsPlaying = true;
-                    AudioSlider.audioDispatcherTime.Start();
-                    AudioSlider.EscalatePointer();
+                    AudioSlider.audioDispatcherTime.Start();//for updating the time span string (1 sec at a time)
+                    AudioSlider.EscalatePointer();// for moving the thumb in slider 
                 }
                 else
                 {
@@ -219,7 +256,8 @@ namespace AudioPlayer.ViewModels
             }
             else
             {
-
+                ExitCurrentAudio();
+                TreeViewModel.SelectedFileIndex = 0;
                 AudioPlayer.MediaEnded -= Media_Ended;
             }
         }
@@ -233,10 +271,7 @@ namespace AudioPlayer.ViewModels
             }
         }
 
-        public void ToggleAutoPlayMode()
-        {
-            IsAutoPlayMode = !IsAutoPlayMode;
-        }
+        
         public  void GetAudioDuration(object sender, EventArgs e)
         {
             
@@ -264,15 +299,15 @@ namespace AudioPlayer.ViewModels
         //triggered whenever user selects the file from treeView
         private async void OnFileSelected()
         {
-         
-         
+
+            Debug.WriteLine($"current volume lvl: {VolumeLvl}");
+
             AudioSlider.IsPlaying = false;
             SelectedFileName = TreeViewModel.SelectedFile.FileName;//get the selected file from the view control
            SelectedFilePath = TreeViewModel.SelectedFile.FilePath;
             AudioPlayer.Open(new Uri(SelectedFilePath));
             await WaitForMediaOpened();
-           PlaySelectedAudio();
-
+          
         }
 
 
@@ -334,6 +369,7 @@ namespace AudioPlayer.ViewModels
                 }
                 else
                 {
+                    
                     TreeViewModel.SelectedFileIndex = 0;
                     AudioPlayer.Close();
                 }
@@ -362,6 +398,39 @@ namespace AudioPlayer.ViewModels
                 Debug.WriteLine("not working/////////////////");
             }
             
+        }
+
+        //volumeManager
+        private void EnableVolumeSlider()
+        {
+            IsVolumeManagerEnb = true;
+        }
+        private void ChangeVolumeLvl()
+        {
+            AudioPlayer.Volume=Math.Floor(VolumeLvl) /100;
+            Debug.WriteLine(Math.Floor(VolumeLvl));
+        }
+        private void DisableVolumeSlider()
+        {
+            IsVolumeManagerEnb = false;
+        }
+        private void CheckVolumeRange()
+        {
+            if (Math.Floor(VolumeLvl) == 0)
+            {
+                VolumeRange = "mute";
+            }
+            if (1<Math.Floor(VolumeLvl) && Math.Floor(VolumeLvl) < 49) {
+                VolumeRange = "small"; 
+            }
+            else if (50< Math.Floor(VolumeLvl)&& Math.Floor(VolumeLvl)<79)
+            {
+                VolumeRange = "medium";
+            }
+            else if(80<Math.Floor(VolumeLvl) && Math.Floor(VolumeLvl)<100)
+            {
+                VolumeRange = "large";
+            }
         }
     }
 }

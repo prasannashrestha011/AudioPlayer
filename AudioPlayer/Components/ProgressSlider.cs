@@ -71,6 +71,7 @@ namespace AudioPlayer.Components
             }
         }
 
+     
         private MediaPlayer audioPlayer;
         public MediaPlayer AudioPlayer
         {
@@ -81,7 +82,7 @@ namespace AudioPlayer.Components
                 OnPropertyChanged(nameof(AudioPlayer));
             }
         }
-        private int counter = 0;
+   
         public ProgressSlider(double currentPosition, double audioDuration,string audioTimeSpanStr, bool isMoving, bool isPlaying,MediaPlayer audioPlayer)
         {
             CurrentPosition = currentPosition;
@@ -127,6 +128,15 @@ namespace AudioPlayer.Components
             }
 
 
+        }
+        public void UpdateAudioTimeSpanStr(object sender, EventArgs e)
+        {
+            var TimeSpan = AudioDuration;
+            if (TimeSpan > 0)
+            {
+                TimeSpan -= CurrentPosition;
+                AudioTimeSpanStr = Utils.FormatTime(TimeSpan);
+            }
         }
         public async void MoveSliderCursor()
         {
@@ -179,14 +189,6 @@ namespace AudioPlayer.Components
                 AudioPlayer.Close();
             }
         }
-        public void UpdateAudioTimeSpanStr(object sender, EventArgs e)
-        {
-            var TimeSpan = AudioDuration;
-            if (TimeSpan>0 )
-            {
-                TimeSpan -= CurrentPosition;
-                AudioTimeSpanStr=Utils.FormatTime(TimeSpan);
-            }
-        }
+
     }
 }

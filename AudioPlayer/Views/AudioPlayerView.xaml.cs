@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AudioPlayer.NavigationStores;
+using AudioPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,9 +25,16 @@ namespace AudioPlayer.Views
         public AudioPlayerView()
         {
             InitializeComponent();
+            MainNavigationStore mainNavStore=new MainNavigationStore();
+            DataContext = new AudioPlayerViewModel(mainNavStore);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
         }

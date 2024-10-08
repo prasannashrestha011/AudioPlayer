@@ -46,4 +46,51 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="VolumeSlider" TargetType="Slider">
+
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid>
+                        <Track Name="PART_Track" IsDirectionReversed="False" Orientation="Vertical">
+
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Background="Cyan" Width="10" IsEnabled="True">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <Border  Background="Cyan" CornerRadius="5"/>
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+
+                            </Track.DecreaseRepeatButton>
+                            
+                            <Track.IncreaseRepeatButton>
+
+                                <RepeatButton Background="Gray" Width="10" IsEnabled="True">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <Border Background="Gray" CornerRadius="5"/>
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Background="Cyan" Width="38" Height="7" >
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+                                            <Border Background="Cyan" BorderBrush="Cyan" BorderThickness="1" CornerRadius="2" >
+                                            
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

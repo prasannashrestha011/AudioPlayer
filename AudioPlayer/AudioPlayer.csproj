@@ -24,6 +24,10 @@
     <None Remove="ImageSource\seekButtons\back.png" />
     <None Remove="ImageSource\seekButtons\front.png" />
     <None Remove="ImageSource\Trash2\createFolder.png" />
+    <None Remove="ImageSource\Volume\large.png" />
+    <None Remove="ImageSource\Volume\medium.png" />
+    <None Remove="ImageSource\Volume\mute.png" />
+    <None Remove="ImageSource\Volume\small.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +51,10 @@
     <Resource Include="ImageSource\Folder&amp;FileIcons\file.ico" />
     <Resource Include="ImageSource\mainThumbnail\mainthumbnail.png" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\deleteFolder.png" />
+    <Resource Include="ImageSource\Volume\medium.png" />
+    <Resource Include="ImageSource\Volume\large.png" />
+    <Resource Include="ImageSource\Volume\mute.png" />
+    <Resource Include="ImageSource\Volume\small.png" />
   </ItemGroup>
 
   <ItemGroup>
