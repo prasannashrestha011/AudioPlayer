@@ -9,6 +9,12 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using AudioPlayer.LocalStorage;
+using AudioPlayer.Components;
+using AudioPlayer.ViewComponents;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AudioPlayer.ViewModels
 {
@@ -84,15 +90,35 @@ namespace AudioPlayer.ViewModels
               
             }
         }
-       
+        private bool isFolderRenaming;
+        public bool IsFolderRenaming
+        {
+            get => isFolderRenaming;
+            set
+            {
+                isFolderRenaming = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool isPopUpOpen;
+        public bool IsPopUpOpen
+        {
+            get => isPopUpOpen;
+            set
+            {
+                isPopUpOpen = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand AddNewDir => new RelayCommandBase(canExecute => true, execute => CreateDir());
         public ICommand DisplayFileName => new RelayCommandBase(canExecute => true, execute => OnFileSelected(execute));
         public ICommand ChangeRootDirCmd => new RelayCommandBase(canExecute => true, execute => ChangeRootFolder());
         public ICommand SelectedFileCmd=>new RelayCommandBase(canExecute=>true, execute => OnFileSelected(execute));
         public ICommand SelectedObj => new RelayCommandBase(canExecute => true, execute => DisplayBranch(execute));
         public ICommand UnFocusValueCmd => new RelayCommandBase(canExecute => true, execute=> UnFocusValue());
+        public ICommand RenameDirCmd => new RelayCommandBase(canExecute => true, execute => RenameDir());
         public ICommand DeleteDirCmd => new RelayCommandBase(canExecute => true, execute => DeleteDir());
-     
+        public ICommand EditFolderCmd => new RelayCommandBase(canExecute => true, execute => EditDir());
         public TreeViewModel()
         {
             
@@ -187,11 +213,16 @@ namespace AudioPlayer.ViewModels
         }
         public void CreateDir()
         {
+            DisablePopUp();
+             AddfolderDialog inputDialog= new AddfolderDialog();
+             inputDialog.ShowDialog();
+            string newfolderName = inputDialog.FolderName;
+            if (newfolderName == null) return;
             if (IsFolderSelected)//for creating sub folder 
             {
 
                 var folderInfo = SelectedFolder;
-                string newfolderName = "New folder";
+               
                 string newfolderPath = Path.Combine(folderInfo.FolderPath, newfolderName);
                 if (folderInfo != null)
                 {
@@ -202,6 +233,7 @@ namespace AudioPlayer.ViewModels
                     };
                     folderInfo.SubFolder.Add(newFolder);
                     Directory.CreateDirectory(newfolderPath);
+                 
                     return;
                 }
                 else
@@ -210,15 +242,52 @@ namespace AudioPlayer.ViewModels
                 }
               
             }
-            string newFolderName = "New Folder";
-            string newFolderPath = Path.Combine(defaultrootFolder, newFolderName);
+   
+            string newFolderPath = Path.Combine(defaultrootFolder, newfolderName);
             Folders.SubFolder.Add(new RootFolder
             {
-                FolderName = newFolderName,
+                FolderName = newfolderName,
                 FolderPath = newFolderPath,
                 
             });
             Directory.CreateDirectory(newFolderPath);
+            IsFolderRenaming = false;
+        }
+        private void RenameDir()
+        {
+            DisablePopUp();
+            if (IsFolderSelected)
+            {
+                AddfolderDialog dialog = new AddfolderDialog();
+                dialog.ShowDialog();
+                var currentDirPath = SelectedFolder.FolderPath;
+                if(currentDirPath == null)
+                {
+                    MessageBox.Show("no folder selected");
+                    return;
+                }
+                try
+                {
+                    var newFolderName = dialog.FolderName;
+                    var newFolderPath = Path.Combine(Path.GetDirectoryName(currentDirPath), newFolderName);
+
+                    Directory.Move(currentDirPath, newFolderPath);
+
+
+
+
+                    LoadTreeView();
+                }catch(Exception err)
+                {
+                    Debug.WriteLine(err.Message);
+                    return;
+                }
+                
+            }
+            else
+            {
+               
+            }
         }
         public void DeleteDir()
         {
@@ -226,19 +295,32 @@ namespace AudioPlayer.ViewModels
             {
                 Directory.Delete(SelectedFolder.FolderPath,true);
                 LoadTreeView();
-               
+                DisablePopUp();
             }
         }
-        
+         private void DisablePopUp()
+        {
+            IsPopUpOpen = false;
+        }
+        public void EditDir()
+        {
+            if (IsPopUpOpen)
+            {
+                IsPopUpOpen = false;
+                IsPopUpOpen = true;
+            }
+            IsPopUpOpen = true;
+        }
         public void DisplayBranch(object parameter)
         {
             IsFolderSelected = true;
             SelectedFolder = parameter as RootFolder;
-        
+            DisablePopUp();
         }
         private void UnFocusValue()
         {
             IsFolderSelected = false;
+            DisablePopUp();
             SelectedFolder = null;
          
         }
@@ -252,6 +334,14 @@ namespace AudioPlayer.ViewModels
                     LoadedFileList.OnLoadedAudioListChanged();
                 }
             }
+        }
+        private Image RenderIcons(string iconPath, bool isPackUri = true)
+        {
+            Image imageIcon = new Image();
+            imageIcon.Width = 32;
+            imageIcon.Height = 32;
+            imageIcon.Source = new BitmapImage(new Uri(iconPath, UriKind.Relative));
+            return imageIcon;
         }
     }
 }

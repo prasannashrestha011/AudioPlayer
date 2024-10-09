@@ -89,5 +89,43 @@ namespace AudioPlayer.LocalStorage
 
             }
         }
+
+        public static void SaveAudioVolumeState(string key, string value)
+        {
+            using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetMachineStoreForApplication())
+            {
+                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(key, FileMode.Create, isoStore))
+                {
+                    using (StreamWriter writer = new StreamWriter(isoStream))
+                    {
+                        writer.Write(value);
+                      
+                    }
+                }
+            }
+
+        }
+        public static string LoadAudioVolumeState(string key)
+        {
+            using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetMachineStoreForApplication())
+            {
+                if (isoStore.FileExists(key))
+                {
+                    using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(key, FileMode.Open, isoStore))
+                    {
+                        using (StreamReader reader = new StreamReader(isoStream))
+                        {
+                           
+                            return reader.ReadToEnd();
+                        }
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+        }
     }
 }

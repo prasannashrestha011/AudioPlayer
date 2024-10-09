@@ -11,6 +11,8 @@
   <ItemGroup>
     <None Remove="ImageSource\AppIcon\icon.ico" />
     <None Remove="ImageSource\back.png" />
+    <None Remove="ImageSource\ContextMenuIcons\delete.png" />
+    <None Remove="ImageSource\ContextMenuIcons\rename.png" />
     <None Remove="ImageSource\Folder&amp;FileIcons\createFolder.png" />
     <None Remove="ImageSource\Folder&amp;FileIcons\folder.ico" />
     <None Remove="ImageSource\Folder&amp;FileIcons\openFolderRoot.png" />
@@ -38,6 +40,8 @@
 
   <ItemGroup>
     <Resource Include="ImageSource\AppIcon\icon.ico" />
+    <Resource Include="ImageSource\ContextMenuIcons\delete.png" />
+    <Resource Include="ImageSource\ContextMenuIcons\rename.png" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\createFolder.png" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\folder.ico" />
     <Resource Include="ImageSource\Folder&amp;FileIcons\openFolderRoot.png" />

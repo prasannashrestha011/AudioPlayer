@@ -59,7 +59,11 @@
                                       RelativeSource={RelativeSource AncestorType=UserControl}}" 
                             CommandParameter="{Binding}"/>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding DataContext.EditFolderCmd,RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
+                     
                     </StackPanel>
                     
                 </HierarchicalDataTemplate>
@@ -83,8 +87,51 @@
                 <i:EventTrigger EventName="MouseLeftButtonDown">
                     <i:InvokeCommandAction Command="{Binding DataContext.UnFocusValueCmd ,RelativeSource={RelativeSource AncestorType=UserControl}}" />
                 </i:EventTrigger>
+                <i:EventTrigger EventName="MouseRightButtonUp">
+                    <i:InvokeCommandAction Command="{Binding DataContext.EditFolderCmd,RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
+            
         </TreeView>
+
+            <Popup IsOpen="{Binding IsPopUpOpen}" 
+                   PopupAnimation="Slide"
+                   Placement="MousePoint" Width="150" Height="80" >
+            <Border  CornerRadius="1" BorderThickness="2" BorderBrush="DimGray">
+                <StackPanel Background="White" >
+                    <Border BorderThickness="0,0,0,1" BorderBrush="DimGray" Margin="0,1,0,1">
+
+                        <Button  Width="150" Command="{Binding AddNewDir}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="../ImageSource/Folder&amp;FileIcons/createFolder.png"  Width="18" RenderOptions.BitmapScalingMode="HighQuality" Margin="5,0,15,0"/>
+                                <TextBlock Text="Create"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    <Border BorderThickness="0,0,0,1" BorderBrush="DimGray" Margin="0,1,0,1">
+
+                        <Button  Width="150" Command="{Binding DeleteDirCmd}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="../ImageSource/ContextMenuIcons/delete.png"  Width="16" RenderOptions.BitmapScalingMode="HighQuality" Margin="5,0,15,0"/>
+                                <TextBlock Text="Delete"/>
+                            </StackPanel>
+                        </Button>
+                    </Border>
+                    <Border  BorderThickness="0,0,0,1" BorderBrush="DimGray" >
+
+
+                        <Button  Width="150" Command="{Binding RenameDirCmd}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left">
+
+                                <StackPanel Orientation="Horizontal">
+                                <Image Source="../ImageSource/ContextMenuIcons/rename.png"  Width="16" RenderOptions.BitmapScalingMode="HighQuality" Margin="5,0,15,0"/>
+                                    <TextBlock Text="Rename"/>
+                                </StackPanel>
+                            </Button>
+                     
+                    </Border>
+                </StackPanel>
+            </Border>
+            </Popup>
 
 
     </Grid>

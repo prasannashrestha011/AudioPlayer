@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="AudioPlayer.ViewComponents.ContextMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AudioPlayer.ViewComponents"
+             mc:Ignorable="d" 
+             Background="White"
+             d:DesignHeight="150" d:DesignWidth="250">
+    <Grid>
+        <StackPanel >
+            <Button Content="Delete" Margin="0,10,0,10" />
+            <Button Content="Rename"/>
+        </StackPanel>  
+    </Grid>
+</UserControl>

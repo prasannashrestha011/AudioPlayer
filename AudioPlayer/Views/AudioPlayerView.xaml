@@ -81,67 +81,46 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Width="90" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Slider
-                        Height="80"
-                        Maximum="100"
-                        Minimum="0"
-                        Value="{Binding VolumeLvl}"
-                       
-                         Orientation="Vertical"
-                        Style="{StaticResource VolumeSlider}"
-                        >
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                <i:InvokeCommandAction Command="{Binding EnableVolumeCmd}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="PreviewMouseMove">
-                                <i:InvokeCommandAction Command="{Binding ToggleVolumeCmd}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding DisableVolumeCmd}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Slider>
                     <Grid Width="40">
                         <ContentControl>
                             <ContentControl.Style>
                                 <Style TargetType="ContentControl">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding VolumeRange}" Value="mute">
+                                        <DataTrigger Binding="{Binding VolumeManager.VolumeRange}" Value="mute">
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
-                                                        Width="32"
-                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                        Source="../ImageSource/Volume/mute.png"/>
+                                       Width="32"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Source="../ImageSource/Volume/mute.png"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding VolumeRange}" Value="small">
+                                        <DataTrigger Binding="{Binding VolumeManager.VolumeRange}" Value="small">
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
-                                                        Width="32"
-                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                        Source="../ImageSource/Volume/small.png"/>
+                                       Width="32"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Source="../ImageSource/Volume/small.png"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding VolumeRange}" Value="medium">
+                                        <DataTrigger Binding="{Binding VolumeManager.VolumeRange}" Value="medium">
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
-                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                        Source="../ImageSource/Volume/medium.png"/>
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Source="../ImageSource/Volume/medium.png"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding VolumeRange}" Value="large">
+                                        <DataTrigger Binding="{Binding VolumeManager.VolumeRange}" Value="large">
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image
-                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                        Source="../ImageSource/Volume/large.png"/>
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Source="../ImageSource/Volume/large.png"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
@@ -150,6 +129,28 @@
                             </ContentControl.Style>
                         </ContentControl>
                     </Grid>
+                    <Slider
+                        Height="80"
+                        Maximum="100"
+                        Minimum="0"
+                        Value="{Binding VolumeManager.VolumeLvl}"
+                       
+                         Orientation="Vertical"
+                        Style="{StaticResource VolumeSlider}"
+                        >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding VolumeManager.EnableVolumeCmd}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseMove">
+                                <i:InvokeCommandAction Command="{Binding VolumeManager.ToggleVolumeCmd}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding VolumeManager.DisableVolumeCmd}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Slider>
+                 
                 </StackPanel>
                 <StackPanel
                     Grid.Column="1"
