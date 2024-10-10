@@ -25,7 +25,6 @@
     <None Remove="ImageSource\seekButtons\active_front.png" />
     <None Remove="ImageSource\seekButtons\back.png" />
     <None Remove="ImageSource\seekButtons\front.png" />
-    <None Remove="ImageSource\Trash2\createFolder.png" />
     <None Remove="ImageSource\Volume\large.png" />
     <None Remove="ImageSource\Volume\medium.png" />
     <None Remove="ImageSource\Volume\mute.png" />
@@ -68,7 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ImageSource\Trash2\" />
     <Folder Include="ImageSource\trash\" />
   </ItemGroup>
 
