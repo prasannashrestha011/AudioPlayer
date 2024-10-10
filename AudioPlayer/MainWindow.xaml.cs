@@ -16,58 +16,81 @@ namespace AudioPlayer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
+        public bool IsNormalState = true;
         public MainWindow()
         {
             InitializeComponent();
         }
         public bool isNavigated = false;
+     
         public bool isPlayLisModelOpened = true;
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            DoubleAnimation animation=new DoubleAnimation();
-            animation.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-            animation.EasingFunction=new QuadraticEase { EasingMode = EasingMode.EaseOut };
-            if (isNavigated)
-            {
-                animation.From = TranslateNav.X;
-                animation.To = TranslateNav.X + 250;
-
-                isNavigated = false;
-            }
-            else
-            {
-                animation.From = TranslateNav.X;
-                animation.To = 0;
-              
-                isNavigated = true;
-            }
-            TranslateNav.BeginAnimation(TranslateTransform.XProperty, animation);
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        DoubleAnimation animation = new DoubleAnimation();
+       
+    private void Button_Click(object sender, RoutedEventArgs e)
         {
             
-            DoubleAnimation animation = new DoubleAnimation();
             animation.Duration = new Duration(TimeSpan.FromSeconds(0.3));
-            animation.EasingFunction=new QuadraticEase { EasingMode=EasingMode.EaseOut };
-            if (isPlayLisModelOpened)
+            animation.EasingFunction = new QuadraticEase
             {
-                animation.From = PlayListModel.Y;
-                animation.To = PlayListModel.Y - 400;
-                isPlayLisModelOpened = false;
-               
-                Debug.WriteLine(isPlayLisModelOpened.ToString());
+                EasingMode = EasingMode.EaseOut
+            };
+            if (isNavigated)
+            {
+                TranslateBack();
+
+
             }
             else
             {
-                animation.From = PlayListModel.Y;
-                animation.To = 400;
-                isPlayLisModelOpened = true;
-                Debug.WriteLine(isPlayLisModelOpened.ToString());
+
+                animation.From = TranslateNav.X;
+                animation.To = 0;
+
+                isNavigated = true;
             }
-            PlayListModel.BeginAnimation(TranslateTransform.YProperty, animation);
+            BeginAnimation();
         }
+        private void BeginAnimation()
+        {
+            TranslateNav.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+        private void TranslateBack()
+        {
+            
+                animation.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+                animation.EasingFunction = new QuadraticEase
+                {
+                    EasingMode = EasingMode.EaseOut
+                }; 
+            animation.From = TranslateNav.X;
+            animation.To = TranslateNav.X + 250;
+
+            isNavigated = false;
+            
+            BeginAnimation();
+
+        }
+   
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            
+            if (isNavigated)
+            {
+                TranslateBack();
+            }
+        }
+
+        private void Grid_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+    
     }
 }

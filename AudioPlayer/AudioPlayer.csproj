@@ -25,6 +25,8 @@
     <None Remove="ImageSource\seekButtons\active_front.png" />
     <None Remove="ImageSource\seekButtons\back.png" />
     <None Remove="ImageSource\seekButtons\front.png" />
+    <None Remove="ImageSource\trash2\pausebutton.png" />
+    <None Remove="ImageSource\trash2\playbutton.png" />
     <None Remove="ImageSource\Volume\large.png" />
     <None Remove="ImageSource\Volume\medium.png" />
     <None Remove="ImageSource\Volume\mute.png" />
@@ -32,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="Microsoft.WindowsAPICodePack.Shell" Version="1.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -67,6 +70,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ImageSource\trash2\" />
     <Folder Include="ImageSource\trash\" />
   </ItemGroup>
 

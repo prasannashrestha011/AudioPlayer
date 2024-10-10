@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Define your custom accent color -->
+    <Color x:Key="MahApps.Colors.AccentBase">#FF1E90FF</Color>
+    <!-- DodgerBlue -->
+
+    <!-- Create a SolidColorBrush using the accent color -->
+    <SolidColorBrush x:Key="MahApps.Brushes.AccentBase" Color="{StaticResource MahApps.Colors.AccentBase}" />
+
+    <!-- Set the WindowTitle brush to use the accent color -->
+    <SolidColorBrush x:Key="MahApps.Brushes.WindowTitle" Color="{StaticResource MahApps.Colors.AccentBase}" />
+</ResourceDictionary>

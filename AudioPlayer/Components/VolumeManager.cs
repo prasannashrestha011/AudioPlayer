@@ -93,7 +93,7 @@ namespace AudioPlayer.Components
             {
                 VolumeRange = "medium";
             }
-            else if (80 < Math.Floor(VolumeLvl) && Math.Floor(VolumeLvl) < 100)
+            else if (80 < Math.Floor(VolumeLvl) && Math.Floor(VolumeLvl) <= 100)
             {
                 VolumeRange = "large";
             }

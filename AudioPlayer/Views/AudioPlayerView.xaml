@@ -10,6 +10,7 @@
              xmlns:vcmp="clr-namespace:AudioPlayer.ViewComponents" xmlns:viewmodels="clr-namespace:AudioPlayer.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AudioPlayerViewModel}"
              mc:Ignorable="d" 
              Background="White"
+              
              d:DesignHeight="450" d:DesignWidth="800"  >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -21,42 +22,69 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#8A5BEA" Offset="0"/>
+                <GradientStop Color="#4E3384" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="150"  />
         </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="File" Command="{Binding OpenFileCmd}"/>
-        </Menu>
+       
         <Grid Grid.Row="1">
-            <Grid SnapsToDevicePixels="True"  >
+            <Border BorderThickness="0" BorderBrush="Black">
+                <Grid SnapsToDevicePixels="True"  >
+
+                    <Border
+                x:Name="MainBorder"
+                BorderThickness="1" 
                 
-                <Image 
-                    RenderTransformOrigin="0.5 0.5"
-                    Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOptions.BitmapScalingMode="HighQuality">
-                
-                </Image>
-            </Grid>
+                Margin="50,10,50,10" CornerRadius="10" MaxWidth="800"  MinWidth="250">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#185CEC" Offset="0 "/>
+                                <GradientStop Color="#758198" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+
+                        <Image  
+                        x:Name="MainImage"
+                   Margin="0,10,0,10"
+RenderTransformOrigin="0.5 0.5"
+Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOptions.BitmapScalingMode="HighQuality" >
+                            <Image.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
+                            </Image.Effect>
+                        </Image>
+
+                    </Border>
+
+                </Grid>
+            </Border>
         </Grid>
-            <Grid Grid.Row="2" Margin="0,15,0,0"  >
+        <Grid Grid.Row="2"  >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
               
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" >
                 <Slider
+               
                     MinWidth="350"
                     MaxWidth="880"
-                    Margin="22,0,22,0"
+                    Margin="22,10,22,0"
                     Minimum="0"
                     Maximum="{Binding AudioSlider.AudioDuration,UpdateSourceTrigger=PropertyChanged}"
                     Value="{Binding AudioSlider.CurrentPosition,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Style="{StaticResource audio_progress_slider}"
-                    Background="Black"
+                    Background="Black" 
                     >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
@@ -70,8 +98,8 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 </Slider>
-                <TextBlock Text="{Binding SelectedFileName,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding AudioSlider.AudioTimeSpanStr,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding SelectedFileName,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightCyan" FontWeight="SemiBold" FontSize="18"/>
+                <TextBlock Text="{Binding AudioSlider.AudioTimeSpanStr,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"  VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightCyan" FontWeight="SemiBold"/>
             </StackPanel>
 
             <Grid Grid.Row="1"  HorizontalAlignment="Stretch" >
@@ -90,7 +118,7 @@
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
-                                       Width="32"
+                                           Width="25"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Source="../ImageSource/Volume/mute.png"/>
                                                 </Setter.Value>
@@ -100,7 +128,7 @@
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
-                                       Width="32"
+                                              Width="25"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Source="../ImageSource/Volume/small.png"/>
                                                 </Setter.Value>
@@ -110,6 +138,7 @@
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image 
+                                                              Width="25"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Source="../ImageSource/Volume/medium.png"/>
                                                 </Setter.Value>
@@ -119,6 +148,7 @@
                                             <Setter Property="Content">
                                                 <Setter.Value>
                                                     <Image
+                                                           Width="25"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Source="../ImageSource/Volume/large.png"/>
                                                 </Setter.Value>
@@ -130,13 +160,13 @@
                         </ContentControl>
                     </Grid>
                     <Slider
-                        Height="80"
+                        Height="55" 
                         Maximum="100"
                         Minimum="0"
                         Value="{Binding VolumeManager.VolumeLvl}"
                        
                          Orientation="Vertical"
-                        Style="{StaticResource VolumeSlider}"
+                        Style="{StaticResource VolumeSlider}" 
                         >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
@@ -161,13 +191,13 @@
                     <Button 
                         HorizontalAlignment="Left"
         Command="{Binding PlayPrevAudioCmd}"
-        Width="35"  Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+        Width="25"  Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                         <Image Source="../ImageSource/seekButtons/back.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                     </Button>
                     <StackPanel 
                             
                         Orientation="Horizontal" Width="Auto" Margin="35,0,35,0">
-                        <Button Width="50"  Command="{Binding BackForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                        <Button Width="30"  Command="{Binding BackForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                             <Image Source="../ImageSource/seekButtons/back.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Button>
                         <StackPanel Orientation="Vertical" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0"  MinWidth="130" >
@@ -181,7 +211,7 @@
                                                         <Button 
            Style="{StaticResource PlayButtonUi  }"
          Command="{Binding PauseAudioCommand}">
-                                                            <Image Source="../ImageSource/pausebutton.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                            <Image Source="../ImageSource/pausebutton.png"   Width="55" RenderOptions.BitmapScalingMode="HighQuality"/>
                                                         </Button>
                                                     </Setter.Value>
                                                 </Setter>
@@ -192,7 +222,7 @@
                                                         <Button 
          Style="{StaticResource PlayButtonUi  }"
          Command="{Binding PlayAudioCommand,UpdateSourceTrigger=PropertyChanged}">
-                                                            <Image Source="../ImageSource/playbutton.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                            <Image Source="../ImageSource/playbutton.png"  Width="55" RenderOptions.BitmapScalingMode="HighQuality" />
                                                         </Button>
                                                     </Setter.Value>
                                                 </Setter>
@@ -202,21 +232,21 @@
                                 </ContentControl.Style>
                             </ContentControl>
                         </StackPanel>
-                        <Button Width="50"   Command="{Binding FastForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+                        <Button Width="30"   Command="{Binding FastForwardCmd}" Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                             <Image Source="../ImageSource/seekButtons/front.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Button>
                     </StackPanel>
                     <Button 
                         HorizontalAlignment="Right"
         Command="{Binding PlayNextAudioCmd}"
-        Width="35"   Style="{StaticResource seekButtons}" Margin="0,10,0,0">
+        Width="25"   Style="{StaticResource seekButtons}" Margin="0,10,0,0">
                         <Image Source="../ImageSource/seekButtons/front.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                     </Button>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2" >
                     
-                    <TextBlock Text="Autoplay" VerticalAlignment="Center" Margin="0,0,9,0" FontWeight="Bold"/>
+                    <TextBlock Text="Autoplay" VerticalAlignment="Center" Margin="0,0,9,0" FontWeight="SemiBold" Foreground="LightCyan"/>
                     <CheckBox 
                         IsChecked="{Binding IsAutoPlayMode,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
                        Width="Auto" Grid.Column="1" HorizontalAlignment="Right" />

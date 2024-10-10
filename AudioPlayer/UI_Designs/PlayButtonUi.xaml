@@ -49,8 +49,67 @@
     <Style x:Key="sidenavButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Transparent"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".5"/>
+            </Trigger>
+            <Trigger Property="IsMouseCaptured" Value="True">
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+
+        </Style.Triggers>
     </Style>
     <Style x:Key="TransparentBackground" TargetType="Button">
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background" Value="Black"/>
+    </Style>
+    <!-- Custom button styles for window buttons -->
+    <Style TargetType="Button" x:Key="WindowButtonStyle">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="0" 
+                                CornerRadius="0">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Style for the minimize button -->
+    <Style TargetType="Button" x:Key="MinimizeButtonStyle" BasedOn="{StaticResource WindowButtonStyle}">
+        <Setter Property="Background" Value="LightBlue"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <!-- Style for the maximize button -->
+    <Style TargetType="Button" x:Key="MaximizeButtonStyle" BasedOn="{StaticResource WindowButtonStyle}">
+        <Setter Property="Background" Value="LightGreen"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <!-- Style for the close button -->
+    <Style TargetType="Button" x:Key="CloseButtonStyle" BasedOn="{StaticResource WindowButtonStyle}">
+        <Setter Property="Background" Value="LightCoral"/>
+        <Setter Property="Foreground" Value="Black"/>
     </Style>
 </ResourceDictionary>
