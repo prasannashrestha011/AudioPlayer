@@ -60,6 +60,7 @@
                                 <RepeatButton Background="Cyan" Width="3" IsEnabled="True">
                                     <RepeatButton.Template>
                                         <ControlTemplate TargetType="RepeatButton">
+                                           
                                             <Border  Background="Cyan"/>
                                         </ControlTemplate>
                                     </RepeatButton.Template>
@@ -82,7 +83,7 @@
                                     <Thumb.Template>
                                         <ControlTemplate>
                                             <Border Background="Cyan" BorderBrush="Cyan" BorderThickness="1" CornerRadius="2" >
-                                            
+                                          
                                             </Border>
                                         </ControlTemplate>
                                     </Thumb.Template>

@@ -109,7 +109,11 @@ Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOp
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Width="90" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Grid Width="40">
+                    <Grid Width="40" Height="70">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="14"/>
+                        </Grid.RowDefinitions>
                         <ContentControl>
                             <ContentControl.Style>
                                 <Style TargetType="ContentControl">
@@ -158,13 +162,14 @@ Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOp
                                 </Style>
                             </ContentControl.Style>
                         </ContentControl>
+                        <TextBlock Grid.Row="1" Text="{Binding VolumeManager.VolumeLvl}" VerticalAlignment="Top"  HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="15" FontFamily="Arial" Foreground="LightBlue" />
                     </Grid>
                     <Slider
                         Height="55" 
                         Maximum="100"
                         Minimum="0"
                         Value="{Binding VolumeManager.VolumeLvl}"
-                       
+                        Tag="{Binding VolumeManager.VolumeLvl}"
                          Orientation="Vertical"
                         Style="{StaticResource VolumeSlider}" 
                         >
