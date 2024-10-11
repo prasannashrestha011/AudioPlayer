@@ -22,6 +22,8 @@ namespace AudioPlayer
         public MainWindow()
         {
             InitializeComponent();
+            this.StateChanged += MainWindow_StateChanged;
+            this.Deactivated += MainWindow_Deactivated;
         }
         public bool isNavigated = false;
      
@@ -80,6 +82,7 @@ namespace AudioPlayer
             if (isNavigated)
             {
                 TranslateBack();
+                PlayListSideBar.DisablePopUp();
             }
         }
 
@@ -90,7 +93,19 @@ namespace AudioPlayer
                 this.DragMove();
             }
         }
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized || this.WindowState == WindowState.Maximized)
+            {
+                PlayListSideBar.DisablePopUp();
+            }
+          
+        }
+        private void MainWindow_Deactivated(object sender, EventArgs e)
+        {
+            PlayListSideBar.DisablePopUp(); // if window looses focus
+        }
 
-    
+
     }
 }

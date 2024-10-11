@@ -232,6 +232,10 @@ namespace AudioPlayer.Views
             while (current != null);
             return null;
         }
-       
+
+        public void DisablePopUp()
+        {
+            TreeContextMenu.IsOpen = false;
+        }
     }
 }

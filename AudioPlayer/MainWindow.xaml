@@ -9,7 +9,7 @@
         mc:Ignorable="d"
       
         Icon="pack://application:,,,/ImageSource/AppIcon/icon.ico"
-        Title="Audio Player" Height="450" Width="489" MinWidth="489"  >
+        Title="Audio Player" Height="450" Width="484" MinWidth="484"  >
 
         <Window.Resources>
             <ResourceDictionary Source="/UI_Designs/PlayButtonUi.xaml"/>
@@ -47,7 +47,7 @@
                 <Button  Height="30" VerticalAlignment="Top" Click="Button_Click" Width="40" Style="{StaticResource sidenavButton}">
                     <Image Source="/ImageSource/NavIcons/ham.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Button>
-                <views:PlayListSideBar   Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                <views:PlayListSideBar x:Name="PlayListSideBar"  Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
 
             </Grid>

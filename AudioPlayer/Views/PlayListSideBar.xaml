@@ -21,9 +21,10 @@
     <Grid ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" >
             <Button Command="{Binding AddNewDir}" Style="{StaticResource TransparentBackground}" >
                 <Image Source="../ImageSource/Folder&amp;FileIcons/createFolder.png" RenderOptions.BitmapScalingMode="HighQuality" />
             </Button>
@@ -35,10 +36,16 @@
             </Button>
           
         </StackPanel>
+        <Border BorderThickness="0,0,0,1" BorderBrush="DimGray" Grid.Row="1"  Background="White">
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" >
+                <Image Source="../ImageSource/Folder&amp;FileIcons/folder.ico" Width="22" HorizontalAlignment="Center" />
+                <TextBlock  Margin="8,0,0,0" Text="{Binding CurrentRootDirName,UpdateSourceTrigger=PropertyChanged}" Foreground="Black" FontWeight="SemiBold" FontSize="19" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
         <TreeView 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
         x:Name="FileExplorerTreeView"
-       Grid.Row="1"
+       Grid.Row="2"
        AllowDrop="True"
        ItemsSource="{Binding Folders.SubFolder,UpdateSourceTrigger=PropertyChanged}" 
        PreviewMouseLeftButtonDown="TreeView_PreviewMouseLeftButtonDown"
@@ -94,9 +101,9 @@
             
         </TreeView>
 
-            <Popup IsOpen="{Binding IsPopUpOpen}" 
+            <Popup x:Name="TreeContextMenu" IsOpen="{Binding IsPopUpOpen}" 
                    PopupAnimation="Slide"
-                   Placement="MousePoint" Width="150" Height="80" >
+                   Placement="MousePoint" Width="150" Height="97" >
             <Border  CornerRadius="1" BorderThickness="2" BorderBrush="DimGray">
                 <StackPanel Background="White" >
                     <Border BorderThickness="0,0,0,1" BorderBrush="DimGray" Margin="0,1,0,1">

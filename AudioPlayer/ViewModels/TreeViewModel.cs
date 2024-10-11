@@ -30,6 +30,16 @@ namespace AudioPlayer.ViewModels
                 OnPropertyChanged();
             }
         }
+        private string currentRootDirName;
+        public string CurrentRootDirName
+        {
+            get => currentRootDirName;
+            set
+            {
+                currentRootDirName = value;
+                OnPropertyChanged(nameof(CurrentRootDirName));
+            }
+        }
         private RootFolder folders;
         public RootFolder Folders
         {
@@ -123,8 +133,16 @@ namespace AudioPlayer.ViewModels
         {
             
             DefaultRootFolder = UserDataLocalStorage.LoadUserRootPath("rootPath.txt") ?? $@"C:\Users\{Environment.UserName}\Music";
+          
             LoadTreeView();
            
+        }
+        private void LoadCurrentDirName()
+        {
+            string[] currentPathPart=DefaultRootFolder.Split('\\');
+            string currentDirName=currentPathPart[currentPathPart.Length-1];
+            CurrentRootDirName= currentDirName;
+          
         }
         private void ChangeRootFolder()
         {
@@ -146,6 +164,7 @@ namespace AudioPlayer.ViewModels
         {
             var rootDir = new DirectoryInfo(DefaultRootFolder);
             Folders = CreateTree(rootDir);
+            LoadCurrentDirName();
         }
         public RootFolder CreateTree(DirectoryInfo rootDir)
         {

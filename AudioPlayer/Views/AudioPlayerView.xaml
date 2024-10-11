@@ -244,7 +244,7 @@ Source="../ImageSource/mainThumbnail/mainthumbnail.png" MaxWidth="400"  RenderOp
                     </Button>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="2" >
+                <StackPanel Orientation="Horizontal" Grid.Column="2"  Width="103.22"    >
                     
                     <TextBlock Text="Autoplay" VerticalAlignment="Center" Margin="0,0,9,0" FontWeight="SemiBold" Foreground="LightCyan"/>
                     <CheckBox 
